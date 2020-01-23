@@ -20,3 +20,22 @@ for s in list:
     print(s)
 
 print('break/continue')
+i = 0
+sum = 0
+while True:
+    i +=1
+    if i ==5:
+        continue
+    if i>10:
+        break
+    sum +=1
+
+print(sum)
+print('4. range')
+numbers = range(2,11,2)
+for x in numbers:
+    print(x)
+print(numbers)
+
+for i in range(10):
+    print("%d hello"%(i))
