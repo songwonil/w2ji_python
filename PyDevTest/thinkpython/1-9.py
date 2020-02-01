@@ -4,6 +4,12 @@
 # 1. print 문에서 괄호 하나를 없애거나 두 괄호를 모두 없애면 어떻게 될까?
 # 에러가 난다.
 from math import pi
+
+def abc():
+    print('abc 입니다')
+     
+
+
 try:
     
     print('fff', 3/0)
