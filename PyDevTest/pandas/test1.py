@@ -1,34 +1,58 @@
-import pandas as pd
- 
-print('series')
-data = [1, 3, 5, 7, 9]
-s = pd.Series(data)
-print(s)
+def func1():
+    ''' 1. 개요 '''
+    str = '''
+    pandas 설치  pip install pandas
+    '''
+    print( str )
 
-print('DataFrame')
-import pandas as pd
-data={
-'year' : [2016,2017,2018],
-'rate' : [2.8 , 3.1 , 3.0],
-'gdp' : ['1.63M' ,'1.73m','1.83m']
+def func2():
+    '''2. pandas 사용법
+    - 1차원  pandas.Series( data ) 
+    '''
+    import pandas as pd
+    data = range(1,6)
+    print(data , type(data))
+    s = pd.Series(data)
+    print( s , type(s) )
 
-}
-df = pd.DataFrame(data)
-print(data)
-print(df)
-'''
-print('panel')
-import pandas as pd
-import numpy as np
+def func3():
+    '''3. 2. pandas 사용법
+    - 2차원 pandas.dataFrame( data )
+    '''
+    import pandas as pd
+    data = {
+    'year': [2016, 2017, 2018],
+    'rate': [2.8, 3.1, 3.0],
+    'gdp': ['1.637M', '1.73M', '1.83M']
+    } 
+    df = pd.DataFrame(data)
+    print( df )
+    print( df[{'rate','year'}] )
 
-data = np.random.rand(2,4,5)
-p = pd.Panel( data )
-print(p)
-'''
-print('3. 데이터 엑세스')
-print(df)
-print(df['year'])
-print( df[df['year'] > 2016])
-print( df['rate'].sum() )
-print( df['rate'].mean() )
-print( df.describe() )
+def func4():
+    '''3. 2pandas 사용법 : 사용하지 않음
+    - 3차원 panel
+     '''
+    import pandas as pd
+    import numpy as np
+    data = np.random.rand(2,3,4)
+    print(data)
+    #p = pd.Panel( data )
+    #print( p )
+    print( help( pd.Panel ) )
+
+
+def func5():
+    '''3. 데이타 엑세스 '''
+    import pandas as pd
+    
+    
+
+
+
+
+
+
+
+
+    
