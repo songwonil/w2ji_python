@@ -3,7 +3,7 @@ title : 최적화 알고리즘
 date : 2020.03.16
 content : 재귀함수를 사용한 최적화 시간을 찾는 프로그램.
 이런 저런
-
+제발
 '''
 
 from numpy.random.mtrand import randint
