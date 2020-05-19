@@ -24,6 +24,7 @@ for ss in list:
     print(a ,'' ,ss.find( attrs={'class':'oknok'}).get_text() )
     a+=1   
 
+#
 #url : href
 #제목 subject
 #작성자 name
