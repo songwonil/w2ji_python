@@ -100,8 +100,8 @@ def todayhumor( dday , page ):
         str_subject = list.find( attrs={'class':'subject'}).find('a').get_text()
         str_name    = list.find( attrs={'class':'name'}).get_text()
         str_date    = ('20'+list.find( attrs={'class':'date'}).get_text()[0:8]).replace("/","") #substring과 replace처리
-        str_hits    = list.find( attrs={'class':'hits'}).get_text()
-        str_ok      = list.find( attrs={'class':'oknok'}).get_text()
+        str_hits    = list.find( attrs={'class':'hits'}).get_text().replace(",","")
+        str_ok      = list.find( attrs={'class':'oknok'}).get_text().replace(",","")
         #print(str_url , str_date , list_chk , cnt)
         if dday == str_date:
             dbInsert( str_div , str_url , str_subject , str_name , str_date , str_hits , str_ok )
@@ -131,26 +131,96 @@ def humoruniv(dday , page):
     #lists = soup.find_all( 'tr' , attrs={'id':'li_chk_pds'} )
     lists = soup.find_all( 'tr' , id=re.compile("^(li_chk_pds-)((?!:).)*$") ) # li_chk_pds- 로 시작하는 전부
     
-    #players_id =  [tag.attrs['data-player-id'] for tag in soup.findAll(lambda tag:tag.has_attr('data-player-id'))]
-    
+    list_chk = 0;   
+        
     for list in lists:
         #print(list)
         str_url     = 'http://web.humoruniv.com/board/humor/'+list.find( 'td',attrs={'class':'li_sbj'}).find('a')['href'] #url값
-        print(str_url) 
-        '''str_subject = list.find( attrs={'class':'subject'}).find('a').get_text()
-        str_name    = list.find( attrs={'class':'name'}).get_text()
-        str_date    = ('20'+list.find( attrs={'class':'date'}).get_text()[0:8]).replace("/","") #substring과 replace처리
-        str_hits    = list.find( attrs={'class':'hits'}).get_text()
-        str_ok      = list.find( attrs={'class':'oknok'}).get_text()'''
+        str_subject = list.find( 'td' , class_='li_sbj').find('a').get_text().strip()
+        str_subject1 = list.find( 'span' , class_='list_comment_num' ).get_text().strip()
+        str_subject = str_subject[0: str_subject.find(str_subject1) ].replace(str_subject1,'').strip()
+        str_name    = list.find( 'span' , class_='hu_nick_txt').get_text().strip()
+        str_date    = list.find( 'span' , class_='w_date' ).get_text()[0:10].replace("-","") #substring과 replace처리
+        str_hits    = list.find( 'td' , class_='li_und' ).get_text().strip().replace(",","")
+        str_ok      = list.find( 'span' , class_='o' ).get_text().strip().replace(",","")
+        str_no      = list.find( 'font' ).get_text().strip().replace(",","")
+        str_ok      = int(str_ok) - int(str_no)
+        
+        
+        if dday == str_date:
+            dbInsert( str_div , str_url , str_subject , str_name , str_date , str_hits , str_ok )
+        
+        if list_chk <= 0 :
+            list_chk = diffDate( dday , str_date )
+        
+           
+    # 지정일자의 이전 일자가 아니면 다시 돌린다.
+    if list_chk <= 0:
+        humoruniv(dday , page+1)
+    else:
+        print('웃대 끝')
+
+
+def battlepage(dday , page):   
+    '''
+    - 페틀페이비 크롤링 
+    '''
+    str_div     = 'battlepage'
+    page_num = str(page)
+    get_url = 'http://v12.battlepage.com/??=Board.Humor.Table&page='+page_num
+    res = getHtml2( get_url )        
+    ## 받은 내용을 html.parser로 우리가 볼 수 있게 파싱한다.
+    soup = BeautifulSoup(res, "html.parser")
+    #print(soup)
+    #
+    lists = soup.find_all( 'table' , class_='bp_board' )
+    #lists = soup.find_all( 'tr' , id=re.compile("^(li_chk_pds-)((?!:).)*$") ) # li_chk_pds- 로 시작하는 전부
     
     
-     
+    list_chk = 0;   
+        
+    for list in lists:
+        #str_notice = list.find( 'td' , class_='li_sbj').find('a').get_text().strip()
+        
+        
+        print('-'*50)        
+        print(list)
+        print('-'*50)
+        
+        '''
+        str_url     = 'http://web.humoruniv.com/board/humor/'+list.find( 'td',attrs={'class':'li_sbj'}).find('a')['href'] #url값
+        str_subject = list.find( 'td' , class_='li_sbj').find('a').get_text().strip()
+        str_subject1 = list.find( 'span' , class_='list_comment_num' ).get_text().strip()
+        str_subject = str_subject[0: str_subject.find(str_subject1) ].replace(str_subject1,'').strip()
+        str_name    = list.find( 'span' , class_='hu_nick_txt').get_text().strip()
+        str_date    = list.find( 'span' , class_='w_date' ).get_text()[0:10].replace("-","") #substring과 replace처리
+        str_hits    = list.find( 'td' , class_='li_und' ).get_text().strip().replace(",","")
+        str_ok      = list.find( 'span' , class_='o' ).get_text().strip().replace(",","")
+        str_no      = list.find( 'font' ).get_text().strip().replace(",","")
+        str_ok      = int(str_ok) - int(str_no)
+        '''
+        '''
+        if dday == str_date:
+            dbInsert( str_div , str_url , str_subject , str_name , str_date , str_hits , str_ok )
+        
+        if list_chk <= 0 :
+            list_chk = diffDate( dday , str_date )
+        '''
+        
+        
+    '''    
+    # 지정일자의 이전 일자가 아니면 다시 돌린다.
+    if list_chk <= 0:
+        battlepage(dday , page+1)
+    else:
+        print('배틀페이지 끝')
+    '''    
 
 # 오늘의 유머 
-#todayhumor('20200522',1)
+#todayhumor('20200525',1) # 1페이지부터 시작
 
 # 웃대
-humoruniv('20200521',0)           
+#humoruniv('20200525',0) #0페이지부터 시작
 
-
-
+#배틀페이지
+battlepage('20200525',1) # 1페이지부터시작
